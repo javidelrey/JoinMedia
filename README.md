@@ -1,5 +1,5 @@
 # JoinMedia
 
 - Miguel Verdú Nieto
-- Cristian Pérez Segura
+- Cristian Pérez Segura :fearful:
 - Javier del Rey Serrano
