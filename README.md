@@ -1,5 +1,5 @@
 # JoinMedia
 
-- Miguel Verdú Nieto
-- Cristian Pérez Segura :fearful:
-- Javier del Rey Serrano
+- Miguel Verdú Nieto :dragon_face:
+- Cristian Pérez Segura :penguin:
+- Javier del Rey Serrano :racehorse:
