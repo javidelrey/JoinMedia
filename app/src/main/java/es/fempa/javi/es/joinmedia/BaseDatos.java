@@ -2,8 +2,12 @@ package es.fempa.javi.es.joinmedia;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 import es.fempa.javi.es.joinmedia.PersonasBD.PersonasEntry;
 
@@ -14,7 +18,7 @@ import es.fempa.javi.es.joinmedia.PersonasBD.PersonasEntry;
 public class BaseDatos extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "joinMedia.db";
-
+    private static SQLiteDatabase db;
     public BaseDatos(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -28,6 +32,7 @@ public class BaseDatos extends SQLiteOpenHelper {
                 + PersonasEntry.PASS + " TEXT NOT NULL,"
                 + "UNIQUE (" + PersonasEntry.ID + "))");
 
+        db = sqLiteDatabase;
         ContentValues values = new ContentValues();
         values.put(PersonasEntry.NAME, "Miguel Verdu");
         values.put(PersonasEntry.EMAIL, "miguelverdu1812@gmail.com");
@@ -48,5 +53,22 @@ public class BaseDatos extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
+    }
+
+    public static ArrayList<PersonasBD> consultar(String query){
+        Log.e("query", query);
+        Cursor resultado = db.rawQuery(query, null);
+        ArrayList<PersonasBD> usuarios = new ArrayList<PersonasBD>();
+
+        while(resultado.moveToNext()){
+            PersonasBD p = new PersonasBD();
+
+            p.setNombre(resultado.getString(resultado.getColumnIndex(PersonasEntry.NAME)));
+            p.setPass(resultado.getString(resultado.getColumnIndex(PersonasEntry.PASS)));
+            p.setEmail(resultado.getString(resultado.getColumnIndex(PersonasEntry.EMAIL)));
+            usuarios.add(p);
+        }
+
+        return usuarios;
     }
 }

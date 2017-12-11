@@ -7,6 +7,42 @@ import android.provider.BaseColumns;
  */
 
 public class PersonasBD {
+    private String nombre;
+    private String email;
+    private String pass;
+    private int id;
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public static abstract class PersonasEntry implements BaseColumns {
         public static final String TABLE_NAME = "usuarios";

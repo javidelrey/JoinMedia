@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
+    private static String[] DUMMY_CREDENTIALS = new String[]{
             "join@gmail.com:000000", "media@gmail.com:111111"
     };
     /**
@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private ArrayList<PersonasBD> usuarios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +94,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        usuarios = BaseDatos.consultar("Select * from usuarios where email like = '"+ mEmailView.getText().toString()
+                + "' and pass like = '"+ mPasswordView.getText().toString() +"'");
+
+        for(PersonasBD p : usuarios){
+            String s = p.getEmail();
+            s += ":" + p.getPass();
+
+            DUMMY_CREDENTIALS[usuarios.indexOf(p)] = s;
+            s = "";
+        }
     }
 
     private void populateAutoComplete() {
