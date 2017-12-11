@@ -10,6 +10,7 @@ import android.view.Window;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 public class SplashScreen extends Activity {
 
     // Set the duration of the splash screen
