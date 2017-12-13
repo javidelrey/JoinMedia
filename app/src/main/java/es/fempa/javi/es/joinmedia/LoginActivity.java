@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.DUMP;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -49,9 +51,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static String[] DUMMY_CREDENTIALS = new String[]{
-            "join@gmail.com:000000", "media@gmail.com:111111"
-    };
+    private static String[] DUMMY_CREDENTIALS;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -95,15 +96,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
-        usuarios = BaseDatos.consultar("Select * from usuarios where email like = '"+ mEmailView.getText().toString()
-                + "' and pass like = '"+ mPasswordView.getText().toString() +"'");
-
+        BaseDatos bd = new BaseDatos(getApplicationContext());
+        usuarios = bd.consultar("Select * from usuarios");
+        DUMMY_CREDENTIALS = new String[usuarios.size()];
         for(PersonasBD p : usuarios){
             String s = p.getEmail();
             s += ":" + p.getPass();
 
             DUMMY_CREDENTIALS[usuarios.indexOf(p)] = s;
+
             s = "";
+        }
+        for(int i = 0; i < DUMMY_CREDENTIALS.length; i++) {
+            Log.e("dummy", DUMMY_CREDENTIALS[i]);
         }
     }
 

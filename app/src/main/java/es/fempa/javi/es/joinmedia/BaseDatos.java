@@ -20,19 +20,20 @@ public class BaseDatos extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "joinMedia.db";
     private static SQLiteDatabase db;
     public BaseDatos(Context context) {
+
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE " + PersonasEntry.TABLE_NAME + " ("
-                + PersonasEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + PersonasEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + PersonasEntry.NAME + " TEXT NOT NULL,"
                 + PersonasEntry.EMAIL + " TEXT NOT NULL,"
                 + PersonasEntry.PASS + " TEXT NOT NULL,"
                 + "UNIQUE (" + PersonasEntry.ID + "))");
 
-        db = sqLiteDatabase;
+
         ContentValues values = new ContentValues();
         values.put(PersonasEntry.NAME, "Miguel Verdu");
         values.put(PersonasEntry.EMAIL, "miguelverdu1812@gmail.com");
@@ -55,9 +56,10 @@ public class BaseDatos extends SQLiteOpenHelper {
 
     }
 
-    public static ArrayList<PersonasBD> consultar(String query){
+    public  ArrayList<PersonasBD> consultar(String query){
+        db = getReadableDatabase();
         Log.e("query", query);
-        Cursor resultado = db.rawQuery(query, null);
+        Cursor resultado = db.rawQuery(query, new String[]{});
         ArrayList<PersonasBD> usuarios = new ArrayList<PersonasBD>();
 
         while(resultado.moveToNext()){
