@@ -33,6 +33,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.Manifest.permission.DUMP;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
