@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="30dp"
-        android:text="You are not Signed In"
+        android:text="@string/textLog2"
         android:textSize="20sp" />
 
     <com.google.android.gms.common.SignInButton
@@ -63,5 +63,15 @@
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:id="@+id/registro"
+        style="@style/Animation.AppCompat.Dialog"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/registro"
+        android:textAllCaps="false"
+        android:textColor="@color/common_google_signin_btn_text_dark_pressed" />
 
 </LinearLayout>

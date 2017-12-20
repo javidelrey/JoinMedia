@@ -1,279 +1,93 @@
 package es.fempa.javi.es.joinmedia;
+
+
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 
-import java.io.InputStream;
+public class RegistroActivity extends AppCompatActivity  implements GoogleApiClient.OnConnectionFailedListener {
 
-
-// A project by Ferdousur Rahman Shajib
-// www.androstock.com
-
-public class RegistroActivity extends AppCompatActivity implements OnClickListener,
-        GoogleApiClient.ConnectionCallbacks, OnConnectionFailedListener {
-
-    // Profile pic image size in pixels
-    private static final int PROFILE_PIC_SIZE = 400;
-
-    /* Request code used to invoke sign in user interactions. */
-    private static final int RC_SIGN_IN = 0;
-
-    /* Client used to interact with Google APIs. */
-    private GoogleApiClient mGoogleApiClient;
-
-    /* A flag indicating that a PendingIntent is in progress and prevents
-    * us from starting further intents.
-    */
-    private boolean mIntentInProgress;
-
-    private boolean mShouldResolve;
-
-    private ConnectionResult connectionResult;
+    private GoogleApiClient googleApiClient;
 
     private SignInButton signInButton;
-    private Button signOutButton;
-    private TextView tvName, tvMail, tvNotSignedIn;
-    private ImageView imgProfilePic;
-    private LinearLayout viewContainer;
+
+    public static final int SIGN_IN_CODE = 777;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_registro);
 
-        imgProfilePic = (ImageView) findViewById(R.id.imgProfilePic);
-        signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        signOutButton = (Button) findViewById(R.id.sign_out_button);
-        tvName = (TextView) findViewById(R.id.tvName);
-        tvMail = (TextView) findViewById(R.id.tvMail);
-        tvNotSignedIn = (TextView) findViewById(R.id.notSignedIn_tv);
-        viewContainer = (LinearLayout) findViewById(R.id.text_view_container);
-
-
-
-        signInButton.setOnClickListener(this);
-        signOutButton.setOnClickListener(this);
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
                 .build();
 
-    }
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
-    protected void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
+        signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        Button registro=(Button)findViewById(R.id.registro);
 
-    protected void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
-
-
-    private void resolveSignInError() {
-        if (connectionResult.hasResolution()) {
-            try {
-                mIntentInProgress = true;
-                connectionResult.startResolutionForResult(this, RC_SIGN_IN);
-            } catch (SendIntentException e) {
-                mIntentInProgress = false;
-                mGoogleApiClient.connect();
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+                startActivityForResult(intent, SIGN_IN_CODE);
             }
-        }
-    }
+        });
 
-    /*
-    When the GoogleApiClient object is unable to establish a connection onConnectionFailed() is called
-     */
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        if (!result.hasResolution()) {
-            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
-                    0).show();
-            return;
-        }
-
-        if (!mIntentInProgress) {
-
-            connectionResult = result;
-
-            if (mShouldResolve) {
-
-                resolveSignInError();
+        registro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegistroActivity.this, DatosActivity.class);
+                startActivity(intent);
             }
-        }
-
-    }
-
-    /*
-    onConnectionFailed() was started with startIntentSenderForResult and the code RC_SIGN_IN,
-    we can capture the result inside Activity.onActivityResult.
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int responseCode,
-                                    Intent intent) {
-        if (requestCode == RC_SIGN_IN) {
-            if (responseCode != RESULT_OK) {
-                mShouldResolve = false;
-            }
-
-            mIntentInProgress = false;
-
-            if (!mGoogleApiClient.isConnecting()) {
-                mGoogleApiClient.connect();
-            }
-        }
-    }
-
-    @Override
-    public void onConnected(Bundle arg0) {
-        mShouldResolve = false;
-        try {
-            if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
-                Person person = Plus.PeopleApi
-                        .getCurrentPerson(mGoogleApiClient);
-                String personName = person.getDisplayName();
-                String personPhotoUrl = person.getImage().getUrl();
-                String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
-
-                tvName.setText(personName);
-                tvMail.setText(email);
-
-                personPhotoUrl = personPhotoUrl.substring(0,
-                        personPhotoUrl.length() - 2)
-                        + PROFILE_PIC_SIZE;
-
-                new LoadProfileImage(imgProfilePic).execute(personPhotoUrl);
-
-                Toast.makeText(getApplicationContext(),
-                        "You are Logged In " + personName,             Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        "Couldnt Get the Person Info", Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        signOutUI();
-
-    }
-
-    private void signOutUI() {
-        signInButton.setVisibility(View.GONE);
-        tvNotSignedIn.setVisibility(View.GONE);
-        signOutButton.setVisibility(View.VISIBLE);
-        viewContainer.setVisibility(View.VISIBLE);
-    }
-
-    private void signInUI() {
-        signInButton.setVisibility(View.VISIBLE);
-        tvNotSignedIn.setVisibility(View.VISIBLE);
-        signOutButton.setVisibility(View.GONE);
-        viewContainer.setVisibility(View.GONE);
-    }
-
-    /**
-     * Fetching user's information name, email, profile pic
-     */
-    private void getProfileInformation() {
+        });
 
     }
 
     @Override
-    public void onConnectionSuspended(int arg0) {
-        mGoogleApiClient.connect();
-        signInUI();
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
-
-
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sign_in_button:
-                onSignInClicked();
-                break;
-            case R.id.sign_out_button:
-                onSignOutClicked();
-                break;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SIGN_IN_CODE) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
         }
     }
 
+    private void handleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
+            goMainScreen();
+        } else {
+            Toast.makeText(this, R.string.common_signin_button_text, Toast.LENGTH_SHORT).show();
 
-    private void onSignInClicked() {
-        if (!mGoogleApiClient.isConnecting()) {
-            mShouldResolve = true;
-            resolveSignInError();
         }
     }
 
-
-    private void onSignOutClicked() {
-        if (mGoogleApiClient.isConnected()) {
-            Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
-            mGoogleApiClient.disconnect();
-            signInUI();
-        }
+    private void goMainScreen() {
+        Log.e("hola","hola");
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
-
-
-
-
-
-    /**
-     * Background Async task to load user profile picture from url
-     * */
-    private class LoadProfileImage extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public LoadProfileImage(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
-
-
-
 }
