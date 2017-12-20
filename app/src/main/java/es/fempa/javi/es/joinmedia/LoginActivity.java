@@ -18,6 +18,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -49,9 +50,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "join@gmail.com:000000", "media@gmail.com:111111"
-    };
+    private static String[] DUMMY_CREDENTIALS;
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -62,11 +61,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private ArrayList<PersonasBD> usuarios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -97,6 +98,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        BaseDatos bd = new BaseDatos(getApplicationContext());
+        usuarios = bd.consultar("Select * from usuarios");
+        DUMMY_CREDENTIALS = new String[usuarios.size()];
+        for(PersonasBD p : usuarios){
+            String s = p.getEmail();
+            s += ":" + p.getPass();
+
+            DUMMY_CREDENTIALS[usuarios.indexOf(p)] = s;
+
+            s = "";
+        }
+        for(int i = 0; i < DUMMY_CREDENTIALS.length; i++) {
+            Log.e("dummy", DUMMY_CREDENTIALS[i]);
+        }
     }
 
     private void populateAutoComplete() {

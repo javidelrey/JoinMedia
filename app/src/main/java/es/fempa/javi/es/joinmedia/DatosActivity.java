@@ -2,7 +2,6 @@ package es.fempa.javi.es.joinmedia;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.EditText;
 
 public class DatosActivity extends AppCompatActivity {
@@ -31,10 +30,7 @@ public class DatosActivity extends AppCompatActivity {
         EditText confimPass=(EditText)findViewById(R.id.editTextConfPass);
         confirmPassText=confimPass.getText().toString();
 
-        Log.e("datos",nombreText);
-        Log.e("datos",emailText);
-        Log.e("datos",passText);
-        Log.e("datos",confirmPassText);
+
 
     }
 }
