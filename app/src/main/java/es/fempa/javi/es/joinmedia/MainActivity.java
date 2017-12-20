@@ -33,7 +33,9 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
@@ -45,11 +47,14 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    TextView tv ;
     GridLayout layout;
     private boolean seleccionado;
     private int posicion;
     private ArrayList<Integer> pos = new ArrayList<Integer>();
+    private ArrayList<ImagenPropia> arrayImagen = new ArrayList<ImagenPropia>();
     private static final int SELECT_FILE = 1;
+    int cont=0;
 
 
     @Override
@@ -58,6 +63,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        tv = (TextView) findViewById(R.id.textView3);
+
         layout = (GridLayout) findViewById(R.id.gridLayout);
 
 
@@ -157,6 +164,7 @@ public class MainActivity extends AppCompatActivity
                     Intent.createChooser(intent, "Seleccione una imagen"),
                     SELECT_FILE);
 
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
@@ -205,6 +213,7 @@ public class MainActivity extends AppCompatActivity
 
                             final ImagenPropia mImg = new ImagenPropia(MainActivity.this);
 
+
                             LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
                             //lp2.weight = 1.0f;
@@ -213,7 +222,7 @@ public class MainActivity extends AppCompatActivity
                             lp2.height = 350;
 
                             //lp2.gravity = Gravity.CENTER;
-                            mImg.setPosicion(layout.getColumnCount()+1);
+                            mImg.setPosicion(arrayImagen.size());
                             mImg.setPadding(25, 0, 0, 0);
                             mImg.setImageBitmap(bmp);
                             //mImg.setMaxHeight(20);
@@ -223,11 +232,15 @@ public class MainActivity extends AppCompatActivity
 
 
 
+
+
+
                                 mImg.setOnLongClickListener(new View.OnLongClickListener() {
                                     @Override
                                     public boolean onLongClick(View v) {
 
                                         posicion = mImg.getPosicion();
+                                        tv.setText(posicion+"");
                                         if(seleccionado != true) {
                                             pos.add(posicion);
                                         }
@@ -252,7 +265,14 @@ public class MainActivity extends AppCompatActivity
 
 
 
-                            layout.addView(mImg);
+
+                            arrayImagen.add(mImg);
+                            layout.removeAllViews();
+                            for(int i = 0; i<arrayImagen.size();i++){
+                                layout.addView(arrayImagen.get(i));
+                            }
+                            //layout.addView(mImg);
+
 
                         }
                     }
@@ -262,13 +282,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void test(View v){
-        for(int i = 0; i<pos.size();i++){
-            Toast.makeText(this, pos+"", Toast.LENGTH_SHORT).show();
+        layout.removeAllViews();
+    arrayImagen.remove(posicion);
+        //arrayImagen.set(posicion,null);
 
+
+        for(int i = 0; i<arrayImagen.size();i++){
+            layout.addView(arrayImagen.get(i));
         }
-
-
-
     }
 
 
