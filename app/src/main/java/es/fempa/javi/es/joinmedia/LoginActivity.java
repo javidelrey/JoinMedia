@@ -33,7 +33,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.Manifest.permission.DUMP;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -75,8 +74,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        mEmailView.setText("join@gmail.com");
-        mPasswordView.setText("000000");
+        mEmailView.setText("javierdelrey3@gmail.com");
+        mPasswordView.setText("123456");
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
