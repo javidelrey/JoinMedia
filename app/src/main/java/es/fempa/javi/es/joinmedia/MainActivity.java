@@ -16,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Layout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     private int posicion;
     private ArrayList<Integer> pos = new ArrayList<Integer>();
     private ArrayList<ImagenPropia> arrayImagen = new ArrayList<ImagenPropia>();
+    private ArrayList<ImagenPropia> arrayImagenBorrar = new ArrayList<ImagenPropia>();
     private static final int SELECT_FILE = 1;
     int cont=0;
 
@@ -214,7 +216,7 @@ public class MainActivity extends AppCompatActivity
                             final ImagenPropia mImg = new ImagenPropia(MainActivity.this);
 
 
-                            LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            final LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
                             //lp2.weight = 1.0f;
 
@@ -223,17 +225,12 @@ public class MainActivity extends AppCompatActivity
 
                             //lp2.gravity = Gravity.CENTER;
                             mImg.setPosicion(arrayImagen.size());
+                            Log.e("pos imagen",mImg.getPosicion()+"");
                             mImg.setPadding(25, 0, 0, 0);
                             mImg.setImageBitmap(bmp);
                             //mImg.setMaxHeight(20);
                             //mImg.setMaxWidth(20);
                             mImg.setLayoutParams(lp2);
-
-
-
-
-
-
 
                                 mImg.setOnLongClickListener(new View.OnLongClickListener() {
                                     @Override
@@ -244,13 +241,13 @@ public class MainActivity extends AppCompatActivity
                                         if(seleccionado != true) {
                                             pos.add(posicion);
                                         }
+                                        pos.add(posicion);
+                                        arrayImagenBorrar.add(mImg);
                                         mImg.setBackground(getDrawable(R.drawable.image_borde));
                                         seleccionado = true;
                                         return true;
                                     }
                                 });
-
-
 
                             mImg.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -258,13 +255,9 @@ public class MainActivity extends AppCompatActivity
                                     Integer posclick =mImg.getPosicion();
                                     pos.remove(posclick);
                                     mImg.setBackground(null);
-
+                                    arrayImagenBorrar.remove(mImg);
                                 }
                             });
-
-
-
-
 
                             arrayImagen.add(mImg);
                             layout.removeAllViews();
@@ -272,8 +265,6 @@ public class MainActivity extends AppCompatActivity
                                 layout.addView(arrayImagen.get(i));
                             }
                             //layout.addView(mImg);
-
-
                         }
                     }
                 }
@@ -282,14 +273,29 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void test(View v){
+        ImagenPropia ip = new ImagenPropia(getApplicationContext());
         layout.removeAllViews();
-    arrayImagen.remove(posicion);
-        //arrayImagen.set(posicion,null);
+        //arrayImagen.remove(posicion);
+        /*
+        if(pos.size()>1) {
+            for (int i = pos.size()-1; i >= 0; i--) {
+                Log.e("pos", i + "");
+                //arrayImagen.set(i,ip);
+                ImagenPropia p = arrayImagen.get(i);
+                arrayImagen.remove(p);
+            }
+        }else{
+            arrayImagen.clear();
+        }*/
 
+        for(ImagenPropia p : arrayImagenBorrar){
+            arrayImagen.remove(p);
+        }
 
         for(int i = 0; i<arrayImagen.size();i++){
             layout.addView(arrayImagen.get(i));
         }
+        pos = new ArrayList<Integer>();
     }
 
 
