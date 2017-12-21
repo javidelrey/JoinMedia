@@ -1,23 +1,15 @@
 package es.fempa.javi.es.joinmedia;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.text.Layout;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -29,19 +21,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -50,7 +34,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     TextView tv ;
     GridLayout layout;
-    private boolean seleccionado;
     private int posicion;
     private ArrayList<Integer> pos = new ArrayList<Integer>();
     private ArrayList<ImagenPropia> arrayImagen = new ArrayList<ImagenPropia>();
@@ -65,7 +48,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        tv = (TextView) findViewById(R.id.textView3);
 
         layout = (GridLayout) findViewById(R.id.gridLayout);
 
@@ -74,7 +56,20 @@ public class MainActivity extends AppCompatActivity
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Selecciona una imagen para borrarla", Toast.LENGTH_SHORT).show();
+                if(arrayImagenBorrar.size()==0) {
+                    Toast.makeText(MainActivity.this, "Selecciona una imagen para borrarla", Toast.LENGTH_SHORT).show();
+                }else{
+                    layout.removeAllViews();
+
+                    for(ImagenPropia p : arrayImagenBorrar){
+                        arrayImagen.remove(p);
+                    }
+
+                    for(int i = 0; i<arrayImagen.size();i++){
+                        layout.addView(arrayImagen.get(i));
+                    }
+                    pos = new ArrayList<Integer>();
+                }
             }
         });
 
@@ -235,16 +230,10 @@ public class MainActivity extends AppCompatActivity
                                 mImg.setOnLongClickListener(new View.OnLongClickListener() {
                                     @Override
                                     public boolean onLongClick(View v) {
-
                                         posicion = mImg.getPosicion();
-                                        tv.setText(posicion+"");
-                                        if(seleccionado != true) {
-                                            pos.add(posicion);
-                                        }
                                         pos.add(posicion);
                                         arrayImagenBorrar.add(mImg);
                                         mImg.setBackground(getDrawable(R.drawable.image_borde));
-                                        seleccionado = true;
                                         return true;
                                     }
                                 });
@@ -271,32 +260,5 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
-
-    public void test(View v){
-        ImagenPropia ip = new ImagenPropia(getApplicationContext());
-        layout.removeAllViews();
-        //arrayImagen.remove(posicion);
-        /*
-        if(pos.size()>1) {
-            for (int i = pos.size()-1; i >= 0; i--) {
-                Log.e("pos", i + "");
-                //arrayImagen.set(i,ip);
-                ImagenPropia p = arrayImagen.get(i);
-                arrayImagen.remove(p);
-            }
-        }else{
-            arrayImagen.clear();
-        }*/
-
-        for(ImagenPropia p : arrayImagenBorrar){
-            arrayImagen.remove(p);
-        }
-
-        for(int i = 0; i<arrayImagen.size();i++){
-            layout.addView(arrayImagen.get(i));
-        }
-        pos = new ArrayList<Integer>();
-    }
-
 
 }
