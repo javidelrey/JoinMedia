@@ -8,20 +8,22 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
@@ -30,11 +32,14 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    TextView tv ;
     GridLayout layout;
-    private boolean seleccionado;
     private int posicion;
     private ArrayList<Integer> pos = new ArrayList<Integer>();
+    private ArrayList<ImagenPropia> arrayImagen = new ArrayList<ImagenPropia>();
+    private ArrayList<ImagenPropia> arrayImagenBorrar = new ArrayList<ImagenPropia>();
     private static final int SELECT_FILE = 1;
+    int cont=0;
 
 
     @Override
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         layout = (GridLayout) findViewById(R.id.gridLayout);
 
 
@@ -50,7 +56,20 @@ public class MainActivity extends AppCompatActivity
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Selecciona una imagen para borrarla", Toast.LENGTH_SHORT).show();
+                if(arrayImagenBorrar.size()==0) {
+                    Toast.makeText(MainActivity.this, "Selecciona una imagen para borrarla", Toast.LENGTH_SHORT).show();
+                }else{
+                    layout.removeAllViews();
+
+                    for(ImagenPropia p : arrayImagenBorrar){
+                        arrayImagen.remove(p);
+                    }
+
+                    for(int i = 0; i<arrayImagen.size();i++){
+                        layout.addView(arrayImagen.get(i));
+                    }
+                    pos = new ArrayList<Integer>();
+                }
             }
         });
 
@@ -142,17 +161,18 @@ public class MainActivity extends AppCompatActivity
                     Intent.createChooser(intent, "Seleccione una imagen"),
                     SELECT_FILE);
 
+
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
-        } /*else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
-        }*/
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -190,7 +210,8 @@ public class MainActivity extends AppCompatActivity
 
                             final ImagenPropia mImg = new ImagenPropia(MainActivity.this);
 
-                            LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                            final LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
                             //lp2.weight = 1.0f;
 
@@ -198,31 +219,24 @@ public class MainActivity extends AppCompatActivity
                             lp2.height = 350;
 
                             //lp2.gravity = Gravity.CENTER;
-                            mImg.setPosicion(layout.getColumnCount()+1);
+                            mImg.setPosicion(arrayImagen.size());
+                            Log.e("pos imagen",mImg.getPosicion()+"");
                             mImg.setPadding(25, 0, 0, 0);
                             mImg.setImageBitmap(bmp);
                             //mImg.setMaxHeight(20);
                             //mImg.setMaxWidth(20);
                             mImg.setLayoutParams(lp2);
 
-
-
-
                                 mImg.setOnLongClickListener(new View.OnLongClickListener() {
                                     @Override
                                     public boolean onLongClick(View v) {
-
                                         posicion = mImg.getPosicion();
-                                        if(seleccionado != true) {
-                                            pos.add(posicion);
-                                        }
+                                        pos.add(posicion);
+                                        arrayImagenBorrar.add(mImg);
                                         mImg.setBackground(getDrawable(R.drawable.image_borde));
-                                        seleccionado = true;
                                         return true;
                                     }
                                 });
-
-
 
                             mImg.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -230,29 +244,21 @@ public class MainActivity extends AppCompatActivity
                                     Integer posclick =mImg.getPosicion();
                                     pos.remove(posclick);
                                     mImg.setBackground(null);
-
+                                    arrayImagenBorrar.remove(mImg);
                                 }
                             });
 
-
-
-
-                            layout.addView(mImg);
-
+                            arrayImagen.add(mImg);
+                            layout.removeAllViews();
+                            for(int i = 0; i<arrayImagen.size();i++){
+                                layout.addView(arrayImagen.get(i));
+                            }
+                            //layout.addView(mImg);
                         }
                     }
                 }
                 break;
         }
     }
-
-    public void test(View v){
-        for(int i = 0; i<pos.size();i++){
-            Toast.makeText(this, pos+"", Toast.LENGTH_SHORT).show();
-
-        }
-
-    }
-
 
 }
