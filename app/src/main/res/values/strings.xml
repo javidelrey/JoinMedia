@@ -22,7 +22,7 @@
 
     <string name="action_settings">Salir</string>
     <string name="registro">Registrate</string>
-    <string name="textLog2">No has iniciado sesion</string>
+    <string name="textLog2">No estas registrado o has introducido mal tus datos....</string>
     <string name="btnGuardar">Guardar</string>
     <string name="btnCancelar">Cancelar</string>
 </resources>
