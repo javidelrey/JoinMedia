@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="es.fempa.javi.es.joinmedia.DatosActivity">
+    tools:context="es.fempa.javi.es.joinmedia.DatosActivity"
+    android:background="@drawable/fondo2">
 
     <EditText
         android:id="@+id/editTextNombre"
