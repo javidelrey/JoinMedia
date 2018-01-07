@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">JoinMedia</string>
+    <string name="app_name">加入媒体</string>
 
 
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
+    <string name="prompt_email">电子邮件</string>
+    <string name="prompt_password">密码</string>
     <string name="action_sign_in">Acceso o registro</string>
     <string name="action_sign_in_short">Registro</string>
     <string name="error_invalid_email">El email no es valido</string>

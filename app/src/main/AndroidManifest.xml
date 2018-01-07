@@ -27,8 +27,9 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DatosActivity"/>
-        <activity android:name=".RegistroActivity"/>
+        <activity android:name=".DatosActivity" />
+        <activity android:name=".RegistroActivity" />
+        <activity android:name=".About"></activity>
     </application>
 
 </manifest>
