@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">メディアに参加する</string>
+
+
+    <string name="prompt_email">メール</string>
+    <string name="prompt_password">パスワード</string>
+    <string name="action_sign_in">アクセスまたは登録</string>
+    <string name="action_sign_in_short">登録</string>
+    <string name="error_invalid_email">電子メールが有効ではありません</string>
+    <string name="error_invalid_password">パスワードは非常に短いです</string>
+    <string name="error_incorrect_password">不適切なユーザー名またはパスワード</string>
+    <string name="error_field_required">必須フィールド</string>
+    <string name="permission_rationale">電子メールの終了を提供するには連絡先権限が必要です</string>
+
+    <string name="title_activity_fullscreen">フルスクリーンアクティビティ</string>
+    <string name="textAbout1">開発者</string>
+    <string name="desarrolladores">{クリスチャン・ペレス、ミゲル・ヴェルデ、ハビ・デル・レイ}</string>
+    <string name="textAbout">メディアに参加する</string>
+    <string name="descripcion">メディアに参加する お気に入りの写真や音楽でモンタージュを作成するために作成されたアプリです。プロジェクトを作成し、最も好きな音楽を追加します。</string>
+    <string name="title_activity_main">主な活動</string>
+
+    <string name="navigation_drawer_open">ナビゲーションを開く</string>
+    <string name="navigation_drawer_close">クローズナビゲーション</string>
+
+    <string name="action_settings">出口</string>
+    <string name="registro">登録</string>
+    <string name="textLog2">登録されていないか、データを正しく入力していない....</string>
+    <string name="btnGuardar">保存する</string>
+    <string name="btnCancelar">キャンセル</string>
+    <string name="btnVolver">戻る</string>
+
+    <string name="title_activity_about">〜について</string>
+</resources>
+
