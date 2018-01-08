@@ -49,7 +49,9 @@
         android:id="@+id/layoutVertical"
         android:layout_width="match_parent"
         android:layout_height="490dp"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical">
+
+    </LinearLayout>
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView1"
@@ -68,6 +70,12 @@
 
     </GridLayout>
     </HorizontalScrollView>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="300dp"></ListView>
 
     <include
         android:id="@+id/include"

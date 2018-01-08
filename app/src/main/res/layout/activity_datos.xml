@@ -31,7 +31,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="Email"
-        android:inputType="textEmailSubject"
+        android:inputType="textEmailAddress"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +46,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="Passsword"
-        android:inputType="textVisiblePassword"
+        android:inputType="textPassword"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="Confirmar Pass"
-        android:inputType="textVisiblePassword"
+        android:inputType="textPassword"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +78,7 @@
         app:srcCompat="@drawable/registro" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/guardar"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextConfPass" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/cancelar"
         style="@style/Widget.AppCompat.ListPopupWindow"
         android:layout_width="150dp"
         android:layout_height="wrap_content"

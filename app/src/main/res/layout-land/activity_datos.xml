@@ -29,7 +29,7 @@
         android:layout_below="@+id/editTextNombre"
         android:ems="10"
         android:hint="Email"
-        android:inputType="textEmailSubject"
+        android:inputType="textEmailAddress"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,7 +43,7 @@
         android:layout_below="@+id/editTextEmail"
         android:ems="10"
         android:hint="Passsword"
-        android:inputType="textVisiblePassword"
+        android:inputType="textPassword"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,13 +53,13 @@
         android:id="@+id/editTextConfPass"
         android:layout_width="347dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/button2"
+        android:layout_above="@+id/guardar"
         android:layout_marginBottom="37dp"
         android:layout_marginStart="20dp"
         android:layout_toEndOf="@+id/imageView4"
         android:ems="10"
         android:hint="Confirmar Pass"
-        android:inputType="textVisiblePassword"
+        android:inputType="textPassword"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,12 +79,12 @@
         app:srcCompat="@drawable/registro" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/guardar"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/button3"
-        android:layout_alignBottom="@+id/button3"
+        android:layout_alignBaseline="@+id/cancelar"
+        android:layout_alignBottom="@+id/cancelar"
         android:layout_alignStart="@+id/editTextConfPass"
         android:text="@string/btnGuardar"
         android:textAllCaps="false"
@@ -93,7 +93,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextConfPass" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/cancelar"
         style="@style/Widget.AppCompat.ListPopupWindow"
         android:layout_width="150dp"
         android:layout_height="wrap_content"

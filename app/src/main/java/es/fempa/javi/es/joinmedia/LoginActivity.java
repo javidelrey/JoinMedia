@@ -74,8 +74,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mPasswordView = (EditText) findViewById(R.id.password);
 
-        mEmailView.setText("javierdelrey3@gmail.com");
-        mPasswordView.setText("123456");
+        Intent data = getIntent();
+        if(data != null){
+            String userRegister = data.getStringExtra("user");
+            String passRegister = data.getStringExtra("pass");
+            mEmailView.setText(userRegister);
+            mPasswordView.setText(passRegister);
+        }
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -179,6 +184,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         boolean cancel = false;
         View focusView = null;
+
+        if(email.equals("") && password.equals("")){
+            Intent intent = new Intent(LoginActivity.this, RegistroActivity.class);
+            startActivity(intent);
+        }
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
