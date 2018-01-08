@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">JoinMedia</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Access or Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">User and/or password wrong</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="textAbout1">Developments</string>
+    <string name="desarrolladores">{Cristian Perez,Miguel Verdu,Javi del Rey}</string>
+    <string name="textAbout">JoinMedia</string>
+    <string name="descripcion">JoinMedia is an app created to make montages with your favorite photos and music. Create your projects and add the music that you like the most.</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Go out</string>
+    <string name="registro">Sign in</string>
+    <string name="textLog2">You are not Registered or introduce wrong your data....</string>
+    <string name="btnGuardar">Save</string>
+    <string name="btnCancelar">Cancel</string>
+
+    <string name="title_activity_about">About</string>
+</resources>
