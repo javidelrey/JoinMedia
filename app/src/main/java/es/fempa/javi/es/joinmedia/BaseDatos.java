@@ -76,8 +76,8 @@ public class BaseDatos extends SQLiteOpenHelper {
 
     public static boolean insertar(String query, SQLiteDatabase bd){
         String params[] = query.split(",");
-        //try{
-            Log.e("bs", query);
+        try{
+
             ContentValues values = new ContentValues();
             values.put(PersonasEntry.NAME, params[0]);
             values.put(PersonasEntry.EMAIL, params[1]);
@@ -85,8 +85,8 @@ public class BaseDatos extends SQLiteOpenHelper {
             bd.insert(PersonasEntry.TABLE_NAME, null, values);
 
             return true;
-        //}catch(Exception e){
-          //  return false;
-        //}
+        }catch(Exception e){
+            return false;
+        }
     }
 }
