@@ -1,6 +1,7 @@
 package es.fempa.javi.es.joinmedia;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,20 +24,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import android.net.Uri;
-import android.content.ContentResolver;
-import android.database.Cursor;
-import android.widget.ListView;
+import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,8 +47,9 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<ImagenPropia> arrayImagenBorrar = new ArrayList<ImagenPropia>();
     private static final int SELECT_FILE = 1;
     int cont=0;
-    private ArrayList<Song> songList;
-    private ListView songView;
+    private Bitmap bmp;
+    private Uri selectedImage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,19 +58,25 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        songView = (ListView)findViewById(R.id.song_list);
+       // ListView listView = (ListView) findViewById(R.id.listView);
+
+        final ListView listview = (ListView) findViewById(R.id.listView);
+        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+                "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
+                "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
+                "Android", "iPhone", "WindowsMobile" };
+
+        final ArrayList<String> list = new ArrayList<String>();
+        for (int i = 0; i < values.length; ++i) {
+            list.add(values[i]);
+        }
+        final StableArrayAdapter adapter = new StableArrayAdapter(this,
+                android.R.layout.simple_list_item_1, list);
+        listview.setAdapter(adapter);
+
         layout = (GridLayout) findViewById(R.id.gridLayout);
-        songList = new ArrayList<Song>();
 
-        getSongList();
-        Collections.sort(songList, new Comparator<Song>(){
-            public int compare(Song a, Song b){
-                return a.getTitle().compareTo(b.getTitle());
-            }
-        });
-
-        SongAdapter songAdt = new SongAdapter(this, songList);
-        songView.setAdapter(songAdt);
 
         FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.iconDelete);
         delete.setOnClickListener(new View.OnClickListener() {
@@ -102,30 +110,31 @@ public class MainActivity extends AppCompatActivity
 
 
     }
+    private class StableArrayAdapter extends ArrayAdapter<String> {
 
-    public void getSongList() {
-        ContentResolver musicResolver = getContentResolver();
-        Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
+        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
 
-        if(musicCursor!=null && musicCursor.moveToFirst()){
-            //get columns
-            int titleColumn = musicCursor.getColumnIndex
-                    (android.provider.MediaStore.Audio.Media.TITLE);
-            int idColumn = musicCursor.getColumnIndex
-                    (android.provider.MediaStore.Audio.Media._ID);
-            int artistColumn = musicCursor.getColumnIndex
-                    (android.provider.MediaStore.Audio.Media.ARTIST);
-            //add songs to list
-            do {
-                long thisId = musicCursor.getLong(idColumn);
-                String thisTitle = musicCursor.getString(titleColumn);
-                String thisArtist = musicCursor.getString(artistColumn);
-                songList.add(new Song(thisId, thisTitle, thisArtist));
+        public StableArrayAdapter(Context context, int textViewResourceId,
+                                  List<String> objects) {
+            super(context, textViewResourceId, objects);
+            for (int i = 0; i < objects.size(); ++i) {
+                mIdMap.put(objects.get(i), i);
             }
-            while (musicCursor.moveToNext());
         }
+
+        @Override
+        public long getItemId(int position) {
+            String item = getItem(position);
+            return mIdMap.get(item);
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
     }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -206,10 +215,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
+            Intent intent = new Intent(this, MontajeVideo.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_manage) {
-            Intent intent = new Intent(MainActivity.this, About.class);
-            startActivity(intent);
 
         } /*else if (id == R.id.nav_share) {
 
@@ -227,7 +236,7 @@ public class MainActivity extends AppCompatActivity
                                     Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         Uri selectedImageUri = null;
-        Uri selectedImage;
+
 
         String filePath = null;
         switch (requestCode) {
@@ -240,14 +249,13 @@ public class MainActivity extends AppCompatActivity
                         if (selectedPath != null) {
                             InputStream imageStream = null;
                             try {
-                                imageStream = getContentResolver().openInputStream(
-                                        selectedImage);
+                                imageStream = getContentResolver().openInputStream(selectedImage);
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
 
                             // Transformamos la URI de la imagen a inputStream y este a un Bitmap
-                            Bitmap bmp = BitmapFactory.decodeStream(imageStream);
+                             bmp = BitmapFactory.decodeStream(imageStream);
 
                             // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
 
@@ -260,6 +268,8 @@ public class MainActivity extends AppCompatActivity
 
                             lp2.width = 350;
                             lp2.height = 350;
+
+                            Log.e(selectedImage.getPath(),"rutaImg");
 
                             //lp2.gravity = Gravity.CENTER;
                             mImg.setPosicion(arrayImagen.size());
@@ -302,6 +312,14 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
         }
+    }
+    public void procesarMontaje(View v){
+        Intent intent = new Intent(this, MontajeVideo.class);
+            Bundle bundle = new Bundle();
+           bundle.putParcelable("imagenes",bmp);
+
+
+        startActivity(intent);
     }
 
 }

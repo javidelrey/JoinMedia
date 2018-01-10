@@ -31,7 +31,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DatosActivity" />
         <activity android:name=".RegistroActivity" />
-        <activity android:name=".About"></activity>
+        <activity android:name=".About" />
+        <activity android:name=".MontajeVideo"></activity>
     </application>
 
 </manifest>
