@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<ImagenPropia> arrayImagenBorrar = new ArrayList<ImagenPropia>();
     private static final int SELECT_FILE = 1;
     int cont=0;
+    private Bitmap bmp;
+    private Uri selectedImage;
 
 
     @Override
@@ -213,6 +215,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
+            Intent intent = new Intent(this, MontajeVideo.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_manage) {
 
@@ -232,7 +236,7 @@ public class MainActivity extends AppCompatActivity
                                     Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         Uri selectedImageUri = null;
-        Uri selectedImage;
+
 
         String filePath = null;
         switch (requestCode) {
@@ -245,14 +249,13 @@ public class MainActivity extends AppCompatActivity
                         if (selectedPath != null) {
                             InputStream imageStream = null;
                             try {
-                                imageStream = getContentResolver().openInputStream(
-                                        selectedImage);
+                                imageStream = getContentResolver().openInputStream(selectedImage);
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
 
                             // Transformamos la URI de la imagen a inputStream y este a un Bitmap
-                            Bitmap bmp = BitmapFactory.decodeStream(imageStream);
+                             bmp = BitmapFactory.decodeStream(imageStream);
 
                             // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
 
@@ -265,6 +268,8 @@ public class MainActivity extends AppCompatActivity
 
                             lp2.width = 350;
                             lp2.height = 350;
+
+                            Log.e(selectedImage.getPath(),"rutaImg");
 
                             //lp2.gravity = Gravity.CENTER;
                             mImg.setPosicion(arrayImagen.size());
@@ -307,6 +312,14 @@ public class MainActivity extends AppCompatActivity
                 }
                 break;
         }
+    }
+    public void procesarMontaje(View v){
+        Intent intent = new Intent(this, MontajeVideo.class);
+            Bundle bundle = new Bundle();
+           bundle.putParcelable("imagenes",bmp);
+
+
+        startActivity(intent);
     }
 
 }

@@ -74,9 +74,16 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="300dp"></ListView>
-
+        android:layout_height="250dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="50dp"></ListView>
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:text="Procesar"
+        android:onClick="procesarMontaje"
+        android:layout_marginLeft="100dp"/>
     <include
         android:id="@+id/include"
         layout="@layout/content_main" />
