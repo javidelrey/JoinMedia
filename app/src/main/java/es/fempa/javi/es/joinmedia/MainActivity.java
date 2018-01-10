@@ -1,8 +1,10 @@
 package es.fempa.javi.es.joinmedia;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -22,22 +24,27 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import android.net.Uri;
+
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.widget.ListView;
+import android.widget.MediaController.MediaPlayerControl;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MediaPlayerControl {
     TextView tv ;
     GridLayout layout;
     private int posicion;
@@ -48,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     int cont=0;
     private ArrayList<Song> songList;
     private ListView songView;
-
+    private ImageView img;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +63,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        SharedPreferences preferences= getSharedPreferences("Preferencias", MODE_PRIVATE);
+        String imagen= preferences.getString("Imagen", null);
+        img = new ImagenPropia(getApplicationContext());
         songView = (ListView)findViewById(R.id.song_list);
         layout = (GridLayout) findViewById(R.id.gridLayout);
         songList = new ArrayList<Song>();
 
-        getSongList();
+        //getSongList();
         Collections.sort(songList, new Comparator<Song>(){
             public int compare(Song a, Song b){
                 return a.getTitle().compareTo(b.getTitle());
@@ -75,7 +85,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if(arrayImagenBorrar.size()==0) {
-                    Toast.makeText(MainActivity.this, "Selecciona una imagen para borrarla", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Selecciona una img para borrarla", Toast.LENGTH_SHORT).show();
                 }else{
                     layout.removeAllViews();
 
@@ -199,7 +209,7 @@ public class MainActivity extends AppCompatActivity
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(
-                    Intent.createChooser(intent, "Seleccione una imagen"),
+                    Intent.createChooser(intent, "Seleccione una img"),
                     SELECT_FILE);
 
 
@@ -246,8 +256,32 @@ public class MainActivity extends AppCompatActivity
                                 e.printStackTrace();
                             }
 
-                            // Transformamos la URI de la imagen a inputStream y este a un Bitmap
+                            // Transformamos la URI de la img a inputStream y este a un Bitmap
                             Bitmap bmp = BitmapFactory.decodeStream(imageStream);
+                            img.setImageResource(R.drawable.logo);
+
+                            SharedPreferences preferences = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("Imagen", img.getResources().toString());
+                            editor.commit();
+
+                            SharedPreferences prefs = this.getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
+                            String val = prefs.getString("Imagen", null);
+
+                            URL url = null;
+                            Bitmap myBitmap = null;
+
+                            try {
+                                url = new URL(val);
+                                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                                connection.setDoInput(true);
+                                connection.connect();
+                                InputStream input = connection.getInputStream();
+                                myBitmap = BitmapFactory.decodeStream(input);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
 
                             // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
 
@@ -263,7 +297,7 @@ public class MainActivity extends AppCompatActivity
 
                             //lp2.gravity = Gravity.CENTER;
                             mImg.setPosicion(arrayImagen.size());
-                            Log.e("pos imagen",mImg.getPosicion()+"");
+                            Log.e("pos img",mImg.getPosicion()+"");
                             mImg.setPadding(25, 0, 0, 0);
                             mImg.setImageBitmap(bmp);
                             //mImg.setMaxHeight(20);
@@ -292,6 +326,13 @@ public class MainActivity extends AppCompatActivity
                             });
 
                             arrayImagen.add(mImg);
+
+                            //arrayImagen.add(myBitmap.get);
+                            //img.setImageBitmap(myBitmap);
+                            ImagenPropia ip = new ImagenPropia(getApplicationContext());
+                            ip.setImageBitmap(myBitmap);
+                            arrayImagen.add(ip);
+
                             layout.removeAllViews();
                             for(int i = 0; i<arrayImagen.size();i++){
                                 layout.addView(arrayImagen.get(i));
@@ -304,4 +345,58 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public int getDuration() {
+        return 0;
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return 0;
+    }
+
+    @Override
+    public void seekTo(int i) {
+
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return false;
+    }
+
+    @Override
+    public int getBufferPercentage() {
+        return 0;
+    }
+
+    @Override
+    public boolean canPause() {
+        return false;
+    }
+
+    @Override
+    public boolean canSeekBackward() {
+        return false;
+    }
+
+    @Override
+    public boolean canSeekForward() {
+        return false;
+    }
+
+    @Override
+    public int getAudioSessionId() {
+        return 0;
+    }
 }

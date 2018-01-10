@@ -32,6 +32,7 @@
         <activity android:name=".DatosActivity" />
         <activity android:name=".RegistroActivity" />
         <activity android:name=".About"></activity>
+        <service android:name="es.fempa.javi.es.joinmedia.MusicService" />
     </application>
 
 </manifest>
