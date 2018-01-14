@@ -30,6 +30,15 @@ public class RegistroActivity extends AppCompatActivity  implements GoogleApiCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
 
+        Button btnVolver=(Button)findViewById(R.id.button4);
+        btnVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();

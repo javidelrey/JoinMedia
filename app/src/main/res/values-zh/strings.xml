@@ -4,9 +4,9 @@
 
     <string name="prompt_email">电子邮件</string>
     <string name="prompt_password">密码</string>
-    <string name="action_sign_in">Acceso o registro</string>
-    <string name="action_sign_in_short">Registro</string>
-    <string name="error_invalid_email">El email no es valido</string>
+    <string name="action_sign_in">访问或注册</string>
+    <string name="action_sign_in_short">注册</string>
+    <string name="error_invalid_email">该电子邮件无效</string>
     <string name="error_invalid_password">El password es muy corto</string>
     <string name="error_incorrect_password">Usuario y/o password incorrectos</string>
     <string name="error_field_required">Campo requerido</string>
@@ -27,6 +27,7 @@
     <string name="textLog2">No estas registrado o has introducido mal tus datos....</string>
     <string name="btnGuardar">Guardar</string>
     <string name="btnCancelar">Cancelar</string>
+    <string name="btnVolver">Volver</string>
 
     <string name="title_activity_about">About</string>
 </resources>

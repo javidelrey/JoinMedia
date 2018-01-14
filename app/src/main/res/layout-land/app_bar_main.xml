@@ -69,6 +69,12 @@
         </GridLayout>
     </HorizontalScrollView>
 
+    <ListView
+        android:id="@+id/song_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="300dp"></ListView>
+
     <include
         android:id="@+id/include"
         layout="@layout/content_main" />

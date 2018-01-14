@@ -18,7 +18,7 @@ import es.fempa.javi.es.joinmedia.PersonasBD.PersonasEntry;
 public class BaseDatos extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "joinMedia.db";
-    private static SQLiteDatabase db;
+    public static SQLiteDatabase db;
     public BaseDatos(Context context) {
 
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -72,5 +72,21 @@ public class BaseDatos extends SQLiteOpenHelper {
         }
 
         return usuarios;
+    }
+
+    public static boolean insertar(String query, SQLiteDatabase bd){
+        String params[] = query.split(",");
+        try{
+
+            ContentValues values = new ContentValues();
+            values.put(PersonasEntry.NAME, params[0]);
+            values.put(PersonasEntry.EMAIL, params[1]);
+            values.put(PersonasEntry.PASS, params[2]);
+            bd.insert(PersonasEntry.TABLE_NAME, null, values);
+
+            return true;
+        }catch(Exception e){
+            return false;
+        }
     }
 }

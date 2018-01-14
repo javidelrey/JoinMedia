@@ -27,6 +27,7 @@
     <string name="textLog2">You are not Registered or introduce wrong your data....</string>
     <string name="btnGuardar">Save</string>
     <string name="btnCancelar">Cancel</string>
+    <string name="btnVolver">Back</string>
 
     <string name="title_activity_about">About</string>
 </resources>
