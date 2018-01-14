@@ -5,18 +5,24 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.ContactsContract;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -46,7 +52,7 @@ public class MontajeVideo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_montaje_video);
-        gridLayoutMontaje = findViewById(R.id.gridLayoutMontaje);
+       // gridLayoutMontaje = findViewById(R.id.gridLayoutMontaje);
 /*
         viewFlipper = (ViewFlipper) this.findViewById(R.id.bckgrndViewFlipper1);
 
@@ -67,32 +73,18 @@ public class MontajeVideo extends AppCompatActivity {
         viewFlipper.setAutoStart(true);
         viewFlipper.setFlipInterval(5000);
         viewFlipper.startFlipping();*/
-        ObjectInputStream ois = null;
-        try
-        {
-            BufferedReader fin =
-                    new BufferedReader(
-                            new InputStreamReader(
-                                    openFileInput(MainActivity.NOMBRE_FICHERO)));
+        arrayImagen = MainActivity.arrayImagen;
 
-            //String texto = fin.readLine();
-            //fin.close();
-            FileInputStream fis = openFileInput(MainActivity.NOMBRE_FICHERO);
-            ois = new ObjectInputStream(fis);
-            Bitmap imp = (Bitmap) ois.readObject();
-            /*Toast.makeText(getApplicationContext(), "", Toast.LENGTH_LONG).show();
-            ImagenPropia ip = new ImagenPropia(getApplicationContext());
-            ip.setImageBitmap(imp);
-            arrayImagen.add(ip);*/
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-            Log.e("Ficheros", "Error al leer fichero desde memoria interna"+ex.getMessage());
-        }
-        for(int i = 0; i<arrayImagen.size();i++){
+        ImageView iv = findViewById(R.id.imageView5);
+
+        iv.setImageBitmap(bp);
+        Toast.makeText(getApplicationContext(), "tam: " + arrayImagen.size(), Toast.LENGTH_LONG).show();
+
+        iv.setImageResource(R.drawable.logo);
+        //gridLayoutMontaje.removeAllViews();
+        /*for(int i = 0; i<arrayImagen.size();i++){
             gridLayoutMontaje.addView(arrayImagen.get(i));
-        }
+        }*/
     }
 
 
