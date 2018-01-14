@@ -16,4 +16,22 @@
         </ViewFlipper>
     </LinearLayout>
 
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="horizontal" >
+        <GridLayout
+            android:id="@+id/gridLayoutMontaje"
+            android:numColumns="auto_fit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="75dp">
+
+        </GridLayout>
+    </HorizontalScrollView>
+
 </android.support.constraint.ConstraintLayout>

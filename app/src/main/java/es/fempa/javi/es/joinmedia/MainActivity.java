@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -23,14 +24,25 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -56,6 +68,9 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<Song> songList;
     private ListView songView;
     private ImageView img;
+    private Button procesar;
+    public static String NOMBRE_FICHERO = "imagenes.dat";
+    private File file;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,16 +84,31 @@ public class MainActivity extends AppCompatActivity
         songView = (ListView)findViewById(R.id.song_list);
         layout = (GridLayout) findViewById(R.id.gridLayout);
         songList = new ArrayList<Song>();
-
+        procesar = findViewById(R.id.procesar);
         //getSongList();
         Collections.sort(songList, new Comparator<Song>(){
             public int compare(Song a, Song b){
                 return a.getTitle().compareTo(b.getTitle());
             }
         });
+        //file = new File(NOMBRE_FICHERO);
+        file = new File(getApplicationContext().getFilesDir(), NOMBRE_FICHERO);
 
         SongAdapter songAdt = new SongAdapter(this, songList);
         songView.setAdapter(songAdt);
+
+        procesar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(arrayImagen.size()==0){
+                    Snackbar.make(view, "no has seleccionado ninguna imagen", Snackbar.LENGTH_SHORT).show();
+                }else{
+                    Intent intent = new Intent(MainActivity.this, MontajeVideo.class);
+
+                    startActivity(intent);
+                }
+            }
+        });
 
         FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.iconDelete);
         delete.setOnClickListener(new View.OnClickListener() {
@@ -220,12 +250,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(MainActivity.this, About.class);
             startActivity(intent);
-
-        } /*else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }*/
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -259,49 +284,61 @@ public class MainActivity extends AppCompatActivity
                             // Transformamos la URI de la img a inputStream y este a un Bitmap
                             Bitmap bmp = BitmapFactory.decodeStream(imageStream);
                             img.setImageResource(R.drawable.logo);
+                            // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
 
-                            SharedPreferences preferences = getSharedPreferences("Preferencias", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("Imagen", img.getResources().toString());
-                            editor.commit();
-
-                            SharedPreferences prefs = this.getSharedPreferences("com.example.app", Context.MODE_PRIVATE);
-                            String val = prefs.getString("Imagen", null);
-
-                            URL url = null;
-                            Bitmap myBitmap = null;
-
+                            FileOutputStream foStream;
+                            ObjectInputStream ois = null;
+                            FileInputStream fis = null;
+                            ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            Bitmap ip = null;/*
                             try {
-                                url = new URL(val);
-                                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                                connection.setDoInput(true);
-                                connection.connect();
-                                InputStream input = connection.getInputStream();
-                                myBitmap = BitmapFactory.decodeStream(input);
+                                foStream = new FileOutputStream(file);
+                                ObjectOutputStream oos = new ObjectOutputStream(out);
+                                ImagenPropia ipAux = new ImagenPropia(getApplicationContext());
+                                ipAux.setPosicion(1);
+                                oos.writeObject(ipAux);
+                                oos.close();
+                                //foStream = openFileOutput("prueba_int.ddr", Context.MODE_APPEND);
+                                ipAux = null;
+                                foStream.write(out.toByteArray());
+                                foStream.close();
+
+                                fis = new FileInputStream(file);
+                                ois = new ObjectInputStream(fis);
+
+                                ipAux = (ImagenPropia) ois.readObject();
+                                Toast.makeText(getApplicationContext(), ""+ipAux.getPosicion(),Toast.LENGTH_LONG).show();
+                            } catch (Exception e) {
+
+                                Toast.makeText(getApplicationContext(), e.getMessage()+"",Toast.LENGTH_LONG).show();
+                            } finally {
+                            }*/
+
+                            FileOutputStream outputStream;
+                            try {
+                                outputStream = openFileOutput(NOMBRE_FICHERO, Context.MODE_PRIVATE);
+                                //outputStream.write("hola".getBytes());
+                                ObjectOutputStream oos = new ObjectOutputStream(out);
+                                oos.writeObject(img);
+                                oos.close();
+                                outputStream.close();
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                             }
 
 
-                            // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
-
                             final ImagenPropia mImg = new ImagenPropia(MainActivity.this);
-
 
                             final LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                            //lp2.weight = 1.0f;
-
                             lp2.width = 350;
                             lp2.height = 350;
-
                             //lp2.gravity = Gravity.CENTER;
                             mImg.setPosicion(arrayImagen.size());
                             Log.e("pos img",mImg.getPosicion()+"");
                             mImg.setPadding(25, 0, 0, 0);
                             mImg.setImageBitmap(bmp);
-                            //mImg.setMaxHeight(20);
-                            //mImg.setMaxWidth(20);
                             mImg.setLayoutParams(lp2);
 
                                 mImg.setOnLongClickListener(new View.OnLongClickListener() {
@@ -325,14 +362,10 @@ public class MainActivity extends AppCompatActivity
                                 }
                             });
 
-                            arrayImagen.add(mImg);
-
-                            //arrayImagen.add(myBitmap.get);
-                            //img.setImageBitmap(myBitmap);
-                            ImagenPropia ip = new ImagenPropia(getApplicationContext());
-                            ip.setImageBitmap(myBitmap);
-                            arrayImagen.add(ip);
-
+                            //arrayImagen.add(mImg);
+                            ImagenPropia aux = new ImagenPropia(getApplicationContext());
+                            aux.setImageBitmap(ip);
+                            arrayImagen.add(aux);
                             layout.removeAllViews();
                             for(int i = 0; i<arrayImagen.size();i++){
                                 layout.addView(arrayImagen.get(i));

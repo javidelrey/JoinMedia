@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -32,6 +32,7 @@
         <activity android:name=".DatosActivity" />
         <activity android:name=".RegistroActivity" />
         <activity android:name=".About"></activity>
+        <activity android:name=".MontajeVideo"></activity>
         <service android:name="es.fempa.javi.es.joinmedia.MusicService" />
     </application>
 
