@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity
     GridLayout layout;
     private int posicion;
     private ArrayList<Integer> pos = new ArrayList<Integer>();
-    private ArrayList<ImagenPropia> arrayImagen = new ArrayList<ImagenPropia>();
+    public static ArrayList<ImagenPropia> arrayImagen = new ArrayList<ImagenPropia>();
     private ArrayList<ImagenPropia> arrayImagenBorrar = new ArrayList<ImagenPropia>();
     private static final int SELECT_FILE = 1;
     int cont=0;
@@ -286,48 +286,6 @@ public class MainActivity extends AppCompatActivity
                             img.setImageResource(R.drawable.logo);
                             // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
 
-                            FileOutputStream foStream;
-                            ObjectInputStream ois = null;
-                            FileInputStream fis = null;
-                            ByteArrayOutputStream out = new ByteArrayOutputStream();
-                            Bitmap ip = null;/*
-                            try {
-                                foStream = new FileOutputStream(file);
-                                ObjectOutputStream oos = new ObjectOutputStream(out);
-                                ImagenPropia ipAux = new ImagenPropia(getApplicationContext());
-                                ipAux.setPosicion(1);
-                                oos.writeObject(ipAux);
-                                oos.close();
-                                //foStream = openFileOutput("prueba_int.ddr", Context.MODE_APPEND);
-                                ipAux = null;
-                                foStream.write(out.toByteArray());
-                                foStream.close();
-
-                                fis = new FileInputStream(file);
-                                ois = new ObjectInputStream(fis);
-
-                                ipAux = (ImagenPropia) ois.readObject();
-                                Toast.makeText(getApplicationContext(), ""+ipAux.getPosicion(),Toast.LENGTH_LONG).show();
-                            } catch (Exception e) {
-
-                                Toast.makeText(getApplicationContext(), e.getMessage()+"",Toast.LENGTH_LONG).show();
-                            } finally {
-                            }*/
-
-                            FileOutputStream outputStream;
-                            try {
-                                outputStream = openFileOutput(NOMBRE_FICHERO, Context.MODE_PRIVATE);
-                                //outputStream.write("hola".getBytes());
-                                ObjectOutputStream oos = new ObjectOutputStream(out);
-                                oos.writeObject(img);
-                                oos.close();
-                                outputStream.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-
-
                             final ImagenPropia mImg = new ImagenPropia(MainActivity.this);
 
                             final LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -362,10 +320,8 @@ public class MainActivity extends AppCompatActivity
                                 }
                             });
 
-                            //arrayImagen.add(mImg);
-                            ImagenPropia aux = new ImagenPropia(getApplicationContext());
-                            aux.setImageBitmap(ip);
-                            arrayImagen.add(aux);
+                            arrayImagen.add(mImg);
+
                             layout.removeAllViews();
                             for(int i = 0; i<arrayImagen.size();i++){
                                 layout.addView(arrayImagen.get(i));
