@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="es.fempa.javi.es.joinmedia.MainActivity">
+    tools:context="es.fempa.javi.es.joinmedia.MainActivity"
+    android:background="@drawable/fondo2">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -42,7 +43,20 @@
         android:layout_height="60dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_delete" />
+        app:backgroundTint="?attr/colorError"
+        app:srcCompat="@drawable/trash" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/procesar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginRight="16dp"
+        app:backgroundTint="@android:color/holo_green_dark"
+        app:layout_anchor="@+id/song_list"
+        app:layout_anchorGravity="right|center"
+        app:srcCompat="@drawable/play" />
+
+
 
 
     <LinearLayout
@@ -77,16 +91,12 @@
         android:layout_height="match_parent"
         android:layout_marginTop="300dp"></ListView>
 
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:text="Procesar"
-        android:id="@+id/procesar"
-        android:layout_marginLeft="100dp"/>
+
 
     <include
         android:id="@+id/include"
-        layout="@layout/content_main" />
+        layout="@layout/content_main"
+        app:layout_anchor="@+id/action_image"
+        app:layout_anchorGravity="bottom|center" />
 
 </android.support.design.widget.CoordinatorLayout>

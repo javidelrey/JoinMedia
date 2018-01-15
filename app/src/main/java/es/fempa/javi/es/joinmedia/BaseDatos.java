@@ -5,9 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -35,13 +33,6 @@ public class BaseDatos extends SQLiteOpenHelper {
                 + PersonasEntry.PASS + " TEXT NOT NULL,"
                 + "UNIQUE (" + PersonasEntry.ID + "))";
         sqLiteDatabase.execSQL(s);
-
-        Log.e("db: ", s);
-        String s2 = "CREATE TABLE imagenes (id INTEGER PRIMARY KEY AUTOINCREMENT, img BLOB NOT NULL, UNIQUE (id))";
-
-        consultar(s2);
-        sqLiteDatabase.execSQL(s2);
-
 
         ContentValues values = new ContentValues();
         values.put(PersonasEntry.NAME, "Miguel Verdu");
