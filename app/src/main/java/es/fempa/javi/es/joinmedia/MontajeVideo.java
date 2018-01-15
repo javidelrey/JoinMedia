@@ -52,16 +52,18 @@ public class MontajeVideo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_montaje_video);
-       // gridLayoutMontaje = findViewById(R.id.gridLayoutMontaje);
-/*
+
         viewFlipper = (ViewFlipper) this.findViewById(R.id.bckgrndViewFlipper1);
+        arrayImagen = MainActivity.arrayImagen;
+        ImagenPropia img = new ImagenPropia(getApplicationContext());
 
-        ImageView img = new ImageView(getApplicationContext());
-        img.setImageDrawable(getDrawable(R.drawable.registro));
 
 
-        viewFlipper.addView(img);
-        gridLayoutMontaje = findViewById(R.id.gridLayoutMontaje);
+        for(int i = 0; i<arrayImagen.size();i++){
+
+            setFlipperImage(arrayImagen.get(i));
+        }
+
 
         fade_in = AnimationUtils.loadAnimation(this,
                 android.R.anim.fade_in);
@@ -72,19 +74,21 @@ public class MontajeVideo extends AppCompatActivity {
         //sets auto flipping
         viewFlipper.setAutoStart(true);
         viewFlipper.setFlipInterval(5000);
-        viewFlipper.startFlipping();*/
-        arrayImagen = MainActivity.arrayImagen;
+        viewFlipper.startFlipping();
 
-        ImageView iv = findViewById(R.id.imageView5);
 
-        iv.setImageBitmap(bp);
+
+
         Toast.makeText(getApplicationContext(), "tam: " + arrayImagen.size(), Toast.LENGTH_LONG).show();
 
-        iv.setImageResource(R.drawable.logo);
-        //gridLayoutMontaje.removeAllViews();
-        /*for(int i = 0; i<arrayImagen.size();i++){
-            gridLayoutMontaje.addView(arrayImagen.get(i));
-        }*/
+
+    }
+
+    private void setFlipperImage(ImagenPropia imagen) {
+       // Log.i("Set Filpper Called", res+"");
+        ImagenPropia image = new ImagenPropia(getApplicationContext());
+        image.setImageDrawable(imagen.getDrawable());
+        viewFlipper.addView(image);
     }
 
 
