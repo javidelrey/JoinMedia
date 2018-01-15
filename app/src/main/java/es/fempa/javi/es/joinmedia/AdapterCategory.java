@@ -1,16 +1,13 @@
 package es.fempa.javi.es.joinmedia;
 
 import android.app.Activity;
-import android.content.Context;
+import android.media.MediaPlayer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 
 /**
  * Created by Cristian on 15/01/2018.
@@ -20,14 +17,16 @@ public class AdapterCategory extends ArrayAdapter<String> {
 
     private final Activity context;
     private final String[] itemname;
+    private final String[] desc;
     private final Integer[] integers;
 
-    public AdapterCategory(Activity context, String[] itemname, Integer[] integers) {
+    public AdapterCategory(Activity context, String[] itemname, String[] desc, Integer[] integers) {
         super(context, R.layout.item_category, itemname);
         // TODO Auto-generated constructor stub
 
         this.context=context;
         this.itemname=itemname;
+        this.desc = desc;
         this.integers=integers;
     }
 
@@ -42,7 +41,9 @@ public class AdapterCategory extends ArrayAdapter<String> {
 
         txtTitle.setText(itemname[posicion]);
         imageView.setImageResource(integers[posicion]);
-        etxDescripcion.setText("Description "+itemname[posicion]);
+        etxDescripcion.setText(desc[posicion]);
+
+
 
         return rowView;
     }

@@ -15,12 +15,15 @@ import android.provider.ContactsContract;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -41,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MontajeVideo extends AppCompatActivity {
-
+    FloatingActionButton stop;
     Animation fade_in, fade_out;
     ViewFlipper viewFlipper;
     GridLayout gridLayoutMontaje;
@@ -53,6 +56,7 @@ public class MontajeVideo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_montaje_video);
 
+        stop = (FloatingActionButton) this.findViewById(R.id.stop);
         viewFlipper = (ViewFlipper) this.findViewById(R.id.bckgrndViewFlipper1);
         arrayImagen = MainActivity.arrayImagen;
         ImagenPropia img = new ImagenPropia(getApplicationContext());
@@ -77,12 +81,17 @@ public class MontajeVideo extends AppCompatActivity {
         viewFlipper.startFlipping();
 
 
-
-
-        Toast.makeText(getApplicationContext(), "tam: " + arrayImagen.size(), Toast.LENGTH_LONG).show();
-
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.pararCancion();
+                Snackbar.make(v, "Reproducción de audio detenida", Snackbar.LENGTH_SHORT).show();
+                finish();
+            }
+        });
 
     }
+
 
     private void setFlipperImage(ImagenPropia imagen) {
        // Log.i("Set Filpper Called", res+"");

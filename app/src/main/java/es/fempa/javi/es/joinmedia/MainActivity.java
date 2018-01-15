@@ -42,11 +42,11 @@ import android.widget.ListView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    MediaPlayer mp;
-    MediaPlayer mp2;
-    MediaPlayer mp3;
-    MediaPlayer mp4;
-    MediaPlayer mp5;
+    static MediaPlayer mp;
+    static MediaPlayer mp2;
+    static MediaPlayer mp3;
+    static MediaPlayer mp4;
+    static MediaPlayer mp5;
 
     TextView tv ;
     GridLayout layout;
@@ -57,12 +57,12 @@ public class MainActivity extends AppCompatActivity
     private static final int SELECT_FILE = 1;
     int cont=0;
     private ImageView img;
-    private Button procesar;
+    private FloatingActionButton procesar;
     public static String NOMBRE_FICHERO = "imagenes.dat";
     private File file;
-
+    private static String cancion ="";
     private String canciones[]=new String[]{"We are the Champions","Crazy Frog","Nyan Cat","Ghost Busters","El pollito pio"};
-
+    private String desc[]= new String[]{"Crazy Frog","Crazy Frog","Daniwell","Ray Parker, Jr.","Pulcino Pio"};
     private Integer[] imgid={
             R.drawable.champions,
             R.drawable.crazyfrog,
@@ -82,12 +82,12 @@ public class MainActivity extends AppCompatActivity
 
         mp = MediaPlayer.create(this,R.raw.champions);
         mp2 = MediaPlayer.create(this,R.raw.crazyfrog);
-        mp3 = MediaPlayer.create(this,R.raw.ghostbusters);
-        mp4 = MediaPlayer.create(this,R.raw.nyancat);
+        mp3 = MediaPlayer.create(this,R.raw.nyancat);
+        mp4 = MediaPlayer.create(this,R.raw.ghostbusters);
         mp5 = MediaPlayer.create(this,R.raw.pollitopio);
 
 
-        AdapterCategory adapter=new AdapterCategory(this, canciones,imgid);
+        AdapterCategory adapter=new AdapterCategory(this, canciones,desc,imgid);
         lista=(ListView)findViewById(R.id.song_list);
         lista.setAdapter(adapter);
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -95,6 +95,20 @@ public class MainActivity extends AppCompatActivity
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String Slecteditem= canciones[+position];
                 Toast.makeText(getApplicationContext(), Slecteditem, Toast.LENGTH_SHORT).show();
+                switch (position+1){
+                    case 1: cancion = "cancion1";
+                    break;
+                    case 2: cancion = "cancion2";
+                        break;
+                    case 3: cancion = "cancion3";
+                        break;
+                    case 4: cancion = "cancion4";
+                        break;
+                    case 5: cancion = "cancion5";
+                        break;
+                    default: cancion = "error";
+                        break;
+                }
             }
         });
 
@@ -118,6 +132,27 @@ public class MainActivity extends AppCompatActivity
                 if(arrayImagen.size()==0){
                     Snackbar.make(view, "no has seleccionado ninguna imagen", Snackbar.LENGTH_SHORT).show();
                 }else{
+                    if(!cancion.equals("")) {
+                        switch (cancion) {
+                            case "cancion1":
+                                mp.start();
+                                break;
+                            case "cancion2":
+                                mp2.start();
+                                break;
+                            case "cancion3":
+                                mp3.start();
+                                break;
+                            case "cancion4":
+                                mp4.start();
+                                break;
+                            case "cancion5":
+                                mp5.start();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                     Intent intent = new Intent(MainActivity.this, MontajeVideo.class);
 
                     startActivity(intent);
@@ -156,6 +191,22 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+    }
+    public static void pararCancion(){
+        switch (cancion){
+            case "cancion1": mp.stop();
+                break;
+            case "cancion2": mp2.stop();
+                break;
+            case "cancion3": mp3.stop();
+                break;
+            case "cancion4": mp4.stop();
+                break;
+            case "cancion5": mp5.stop();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -281,8 +332,8 @@ public class MainActivity extends AppCompatActivity
 
                             final LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                            lp2.width = 350;
-                            lp2.height = 350;
+                            lp2.width = 450;
+                            lp2.height = 450;
                             //lp2.gravity = Gravity.CENTER;
                             mImg.setPosicion(arrayImagen.size());
                             Log.e("pos img",mImg.getPosicion()+"");
@@ -324,5 +375,6 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
+
 
 }
