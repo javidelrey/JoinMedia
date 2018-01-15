@@ -1,56 +1,77 @@
 package es.fempa.javi.es.joinmedia;
 
 import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
+
+    MediaPlayer mp;
+    MediaPlayer mp2;
+    MediaPlayer mp3;
+    MediaPlayer mp4;
+    MediaPlayer mp5;
+
     TextView tv ;
     GridLayout layout;
     private int posicion;
     private ArrayList<Integer> pos = new ArrayList<Integer>();
-    private ArrayList<ImagenPropia> arrayImagen = new ArrayList<ImagenPropia>();
+    public static ArrayList<ImagenPropia> arrayImagen = new ArrayList<ImagenPropia>();
     private ArrayList<ImagenPropia> arrayImagenBorrar = new ArrayList<ImagenPropia>();
     private static final int SELECT_FILE = 1;
     int cont=0;
-    private Bitmap bmp;
-    private Uri selectedImage;
+    private ImageView img;
+    private Button procesar;
+    public static String NOMBRE_FICHERO = "imagenes.dat";
+    private File file;
 
+    private String canciones[]=new String[]{"We are the Champions","Crazy Frog","Nyan Cat","Ghost Busters","El pollito pio"};
+
+    private Integer[] imgid={
+            R.drawable.champions,
+            R.drawable.crazyfrog,
+            R.drawable.nyancat,
+            R.drawable.ghostbusters,
+            R.drawable.pollito,
+    };
+
+    private ListView lista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,32 +80,57 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       // ListView listView = (ListView) findViewById(R.id.listView);
+        mp = MediaPlayer.create(this,R.raw.champions);
+        mp2 = MediaPlayer.create(this,R.raw.crazyfrog);
+        mp3 = MediaPlayer.create(this,R.raw.ghostbusters);
+        mp4 = MediaPlayer.create(this,R.raw.nyancat);
+        mp5 = MediaPlayer.create(this,R.raw.pollitopio);
 
-        //final ListView listview = (ListView) findViewById(R.id.a);
-        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
-                "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
-                "Android", "iPhone", "WindowsMobile" };
 
-        final ArrayList<String> list = new ArrayList<String>();
-        for (int i = 0; i < values.length; ++i) {
-            list.add(values[i]);
-        }
-        final StableArrayAdapter adapter = new StableArrayAdapter(this,
-                android.R.layout.simple_list_item_1, list);
-        //listview.setAdapter(adapter);
+        AdapterCategory adapter=new AdapterCategory(this, canciones,imgid);
+        lista=(ListView)findViewById(R.id.song_list);
+        lista.setAdapter(adapter);
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String Slecteditem= canciones[+position];
+                Toast.makeText(getApplicationContext(), Slecteditem, Toast.LENGTH_SHORT).show();
+            }
+        });
 
+
+
+
+
+
+
+        SharedPreferences preferences= getSharedPreferences("Preferencias", MODE_PRIVATE);
+        String imagen= preferences.getString("Imagen", null);
+        img = new ImagenPropia(getApplicationContext());
         layout = (GridLayout) findViewById(R.id.gridLayout);
+        procesar = findViewById(R.id.procesar);
+        //file = new File(NOMBRE_FICHERO);
+        file = new File(getApplicationContext().getFilesDir(), NOMBRE_FICHERO);
 
+        procesar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(arrayImagen.size()==0){
+                    Snackbar.make(view, "no has seleccionado ninguna imagen", Snackbar.LENGTH_SHORT).show();
+                }else{
+                    Intent intent = new Intent(MainActivity.this, MontajeVideo.class);
+
+                    startActivity(intent);
+                }
+            }
+        });
 
         FloatingActionButton delete = (FloatingActionButton) findViewById(R.id.iconDelete);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(arrayImagenBorrar.size()==0) {
-                    Toast.makeText(MainActivity.this, "Selecciona una imagen para borrarla", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Selecciona una img para borrarla", Toast.LENGTH_SHORT).show();
                 }else{
                     layout.removeAllViews();
 
@@ -111,31 +157,6 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-    private class StableArrayAdapter extends ArrayAdapter<String> {
-
-        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
-
-        public StableArrayAdapter(Context context, int textViewResourceId,
-                                  List<String> objects) {
-            super(context, textViewResourceId, objects);
-            for (int i = 0; i < objects.size(); ++i) {
-                mIdMap.put(objects.get(i), i);
-            }
-        }
-
-        @Override
-        public long getItemId(int position) {
-            String item = getItem(position);
-            return mIdMap.get(item);
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-
-    }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -209,25 +230,18 @@ public class MainActivity extends AppCompatActivity
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(
-                    Intent.createChooser(intent, "Seleccione una imagen"),
+                    Intent.createChooser(intent, "Seleccione una img"),
                     SELECT_FILE);
 
 
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_slideshow) {
-            Intent intent = new Intent(this, MontajeVideo.class);
-            startActivity(intent);
 
         } else if (id == R.id.nav_manage) {
-            Intent intent = new Intent(this, About.class);
+            Intent intent = new Intent(MainActivity.this, About.class);
             startActivity(intent);
-
-        } /*else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }*/
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -239,7 +253,7 @@ public class MainActivity extends AppCompatActivity
                                     Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         Uri selectedImageUri = null;
-
+        Uri selectedImage;
 
         String filePath = null;
         switch (requestCode) {
@@ -252,35 +266,28 @@ public class MainActivity extends AppCompatActivity
                         if (selectedPath != null) {
                             InputStream imageStream = null;
                             try {
-                                imageStream = getContentResolver().openInputStream(selectedImage);
+                                imageStream = getContentResolver().openInputStream(
+                                        selectedImage);
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
 
-                            // Transformamos la URI de la imagen a inputStream y este a un Bitmap
-                             bmp = BitmapFactory.decodeStream(imageStream);
-                             guardarImagen(bmp);
+                            // Transformamos la URI de la img a inputStream y este a un Bitmap
+                            Bitmap bmp = BitmapFactory.decodeStream(imageStream);
+                            img.setImageResource(R.drawable.logo);
                             // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
 
                             final ImagenPropia mImg = new ImagenPropia(MainActivity.this);
 
-
                             final LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-                            //lp2.weight = 1.0f;
 
                             lp2.width = 350;
                             lp2.height = 350;
-
-                            Log.e(selectedImage.getPath(),"rutaImg");
-
                             //lp2.gravity = Gravity.CENTER;
                             mImg.setPosicion(arrayImagen.size());
-                            Log.e("pos imagen",mImg.getPosicion()+"");
+                            Log.e("pos img",mImg.getPosicion()+"");
                             mImg.setPadding(25, 0, 0, 0);
                             mImg.setImageBitmap(bmp);
-                            //mImg.setMaxHeight(20);
-                            //mImg.setMaxWidth(20);
                             mImg.setLayoutParams(lp2);
 
                                 mImg.setOnLongClickListener(new View.OnLongClickListener() {
@@ -305,6 +312,7 @@ public class MainActivity extends AppCompatActivity
                             });
 
                             arrayImagen.add(mImg);
+
                             layout.removeAllViews();
                             for(int i = 0; i<arrayImagen.size();i++){
                                 layout.addView(arrayImagen.get(i));
@@ -316,33 +324,5 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
-    public void guardarImagen(Bitmap bitmap) {
-
-        // tamaño del baos depende del tamaño de tus imagenes en promedio
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(10480);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);
-        byte[] blob = baos.toByteArray();
-        // aqui tenemos el byte[] con el imagen comprimido, ahora lo guardemos en SQLite
-        SQLiteDatabase db = BaseDatos.db;
-        ContentValues vl = new ContentValues();
-        vl.put("img", blob);
-        db.insert("imagenes", null, vl);
-        /*String sql = "INSERT INTO imagenes (img) VALUES(?)";
-        SQLiteStatement insert = db.compileStatement(sql);
-        insert.clearBindings();
-        insert.bindBlob(1, blob);
-        insert.executeInsert();
-        db.close();*/
-
-        Cursor resultado = db.rawQuery("select * from imagenes", new String[]{});
-        int aux = 0;
-
-        while(resultado.moveToNext()){
-            Toast.makeText(getApplicationContext(), "imagen: " + aux, Toast.LENGTH_SHORT).show();
-            aux++;
-        }
-    }
-
-
 
 }

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -56,6 +58,8 @@ public class BaseDatos extends SQLiteOpenHelper {
         values.put(PersonasEntry.EMAIL, "icristian7@gmail.com");
         values.put(PersonasEntry.PASS, "123456");
         sqLiteDatabase.insert(PersonasEntry.TABLE_NAME, null, values);
+
+
     }
 
     @Override
