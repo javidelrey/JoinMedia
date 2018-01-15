@@ -1,12 +1,12 @@
 package es.fempa.javi.es.joinmedia;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -31,32 +32,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
 import android.widget.ListView;
-import android.widget.MediaController.MediaPlayerControl;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MediaPlayerControl {
+        implements NavigationView.OnNavigationItemSelectedListener{
+
+    MediaPlayer mp;
+    MediaPlayer mp2;
+    MediaPlayer mp3;
+    MediaPlayer mp4;
+    MediaPlayer mp5;
+
     TextView tv ;
     GridLayout layout;
     private int posicion;
@@ -65,12 +56,23 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<ImagenPropia> arrayImagenBorrar = new ArrayList<ImagenPropia>();
     private static final int SELECT_FILE = 1;
     int cont=0;
-    private ArrayList<Song> songList;
-    private ListView songView;
     private ImageView img;
     private Button procesar;
     public static String NOMBRE_FICHERO = "imagenes.dat";
     private File file;
+
+    private String canciones[]=new String[]{"We are the Champions","Crazy Frog","Nyan Cat","Ghost Busters","El pollito pio"};
+
+    private Integer[] imgid={
+            R.drawable.champions,
+            R.drawable.crazyfrog,
+            R.drawable.nyancat,
+            R.drawable.ghostbusters,
+            R.drawable.pollito,
+    };
+
+    private ListView lista;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,24 +80,37 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mp = MediaPlayer.create(this,R.raw.champions);
+        mp2 = MediaPlayer.create(this,R.raw.crazyfrog);
+        mp3 = MediaPlayer.create(this,R.raw.ghostbusters);
+        mp4 = MediaPlayer.create(this,R.raw.nyancat);
+        mp5 = MediaPlayer.create(this,R.raw.pollitopio);
+
+
+        AdapterCategory adapter=new AdapterCategory(this, canciones,imgid);
+        lista=(ListView)findViewById(R.id.song_list);
+        lista.setAdapter(adapter);
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String Slecteditem= canciones[+position];
+                Toast.makeText(getApplicationContext(), Slecteditem, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
+
+
+
         SharedPreferences preferences= getSharedPreferences("Preferencias", MODE_PRIVATE);
         String imagen= preferences.getString("Imagen", null);
         img = new ImagenPropia(getApplicationContext());
-        songView = (ListView)findViewById(R.id.song_list);
         layout = (GridLayout) findViewById(R.id.gridLayout);
-        songList = new ArrayList<Song>();
         procesar = findViewById(R.id.procesar);
-        //getSongList();
-        Collections.sort(songList, new Comparator<Song>(){
-            public int compare(Song a, Song b){
-                return a.getTitle().compareTo(b.getTitle());
-            }
-        });
         //file = new File(NOMBRE_FICHERO);
         file = new File(getApplicationContext().getFilesDir(), NOMBRE_FICHERO);
-
-        SongAdapter songAdt = new SongAdapter(this, songList);
-        songView.setAdapter(songAdt);
 
         procesar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,30 +156,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-    }
-
-    public void getSongList() {
-        ContentResolver musicResolver = getContentResolver();
-        Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
-
-        if(musicCursor!=null && musicCursor.moveToFirst()){
-            //get columns
-            int titleColumn = musicCursor.getColumnIndex
-                    (android.provider.MediaStore.Audio.Media.TITLE);
-            int idColumn = musicCursor.getColumnIndex
-                    (android.provider.MediaStore.Audio.Media._ID);
-            int artistColumn = musicCursor.getColumnIndex
-                    (android.provider.MediaStore.Audio.Media.ARTIST);
-            //add songs to list
-            do {
-                long thisId = musicCursor.getLong(idColumn);
-                String thisTitle = musicCursor.getString(titleColumn);
-                String thisArtist = musicCursor.getString(artistColumn);
-                songList.add(new Song(thisId, thisTitle, thisArtist));
-            }
-            while (musicCursor.moveToNext());
-        }
     }
 
     @Override
@@ -334,58 +325,4 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public int getDuration() {
-        return 0;
-    }
-
-    @Override
-    public int getCurrentPosition() {
-        return 0;
-    }
-
-    @Override
-    public void seekTo(int i) {
-
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return false;
-    }
-
-    @Override
-    public int getBufferPercentage() {
-        return 0;
-    }
-
-    @Override
-    public boolean canPause() {
-        return false;
-    }
-
-    @Override
-    public boolean canSeekBackward() {
-        return false;
-    }
-
-    @Override
-    public boolean canSeekForward() {
-        return false;
-    }
-
-    @Override
-    public int getAudioSessionId() {
-        return 0;
-    }
 }
