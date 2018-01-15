@@ -26,12 +26,19 @@ public class BaseDatos extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + PersonasEntry.TABLE_NAME + " ("
+        String s = "CREATE TABLE " + PersonasEntry.TABLE_NAME + " ("
                 + PersonasEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + PersonasEntry.NAME + " TEXT NOT NULL,"
                 + PersonasEntry.EMAIL + " TEXT NOT NULL,"
                 + PersonasEntry.PASS + " TEXT NOT NULL,"
-                + "UNIQUE (" + PersonasEntry.ID + "))");
+                + "UNIQUE (" + PersonasEntry.ID + "))";
+        sqLiteDatabase.execSQL(s);
+
+        Log.e("db: ", s);
+        String s2 = "CREATE TABLE imagenes (id INTEGER PRIMARY KEY AUTOINCREMENT, img BLOB NOT NULL, UNIQUE (id))";
+
+        consultar(s2);
+        sqLiteDatabase.execSQL(s2);
 
 
         ContentValues values = new ContentValues();
@@ -58,7 +65,7 @@ public class BaseDatos extends SQLiteOpenHelper {
 
     public  ArrayList<PersonasBD> consultar(String query){
         db = getReadableDatabase();
-        Log.e("query", query);
+        Log.d("query", query);
         Cursor resultado = db.rawQuery(query, new String[]{});
         ArrayList<PersonasBD> usuarios = new ArrayList<PersonasBD>();
 
@@ -82,6 +89,7 @@ public class BaseDatos extends SQLiteOpenHelper {
             values.put(PersonasEntry.NAME, params[0]);
             values.put(PersonasEntry.EMAIL, params[1]);
             values.put(PersonasEntry.PASS, params[2]);
+
             bd.insert(PersonasEntry.TABLE_NAME, null, values);
 
             return true;

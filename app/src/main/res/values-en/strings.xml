@@ -14,7 +14,7 @@
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="textAbout1">Developments</string>
-    <string name="desarrolladores">{Cristian Perez,Miguel Verdu,Javi del Rey}</string>
+    <string name="desarrolladores">{Cristian Perez, Miguel Verdu, Javi del Rey}</string>
     <string name="textAbout">JoinMedia</string>
     <string name="descripcion">JoinMedia is an app created to make montages with your favorite photos and music. Create your projects and add the music that you like the most.</string>
     <string name="title_activity_main">MainActivity</string>

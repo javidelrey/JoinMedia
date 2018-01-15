@@ -1,36 +1,37 @@
 package es.fempa.javi.es.joinmedia;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity
 
        // ListView listView = (ListView) findViewById(R.id.listView);
 
-        final ListView listview = (ListView) findViewById(R.id.listView);
+        //final ListView listview = (ListView) findViewById(R.id.a);
         String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
                 "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
                 "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         }
         final StableArrayAdapter adapter = new StableArrayAdapter(this,
                 android.R.layout.simple_list_item_1, list);
-        listview.setAdapter(adapter);
+        //listview.setAdapter(adapter);
 
         layout = (GridLayout) findViewById(R.id.gridLayout);
 
@@ -219,6 +220,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.nav_manage) {
+            Intent intent = new Intent(this, About.class);
+            startActivity(intent);
 
         } /*else if (id == R.id.nav_share) {
 
@@ -256,7 +259,7 @@ public class MainActivity extends AppCompatActivity
 
                             // Transformamos la URI de la imagen a inputStream y este a un Bitmap
                              bmp = BitmapFactory.decodeStream(imageStream);
-
+                             guardarImagen(bmp);
                             // Ponemos nuestro bitmap en un ImageView que tengamos en la vista
 
                             final ImagenPropia mImg = new ImagenPropia(MainActivity.this);
@@ -313,13 +316,33 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
-    public void procesarMontaje(View v){
-        Intent intent = new Intent(this, MontajeVideo.class);
-            Bundle bundle = new Bundle();
-           bundle.putParcelable("imagenes",bmp);
+    public void guardarImagen(Bitmap bitmap) {
 
+        // tamaño del baos depende del tamaño de tus imagenes en promedio
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(10480);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, baos);
+        byte[] blob = baos.toByteArray();
+        // aqui tenemos el byte[] con el imagen comprimido, ahora lo guardemos en SQLite
+        SQLiteDatabase db = BaseDatos.db;
+        ContentValues vl = new ContentValues();
+        vl.put("img", blob);
+        db.insert("imagenes", null, vl);
+        /*String sql = "INSERT INTO imagenes (img) VALUES(?)";
+        SQLiteStatement insert = db.compileStatement(sql);
+        insert.clearBindings();
+        insert.bindBlob(1, blob);
+        insert.executeInsert();
+        db.close();*/
 
-        startActivity(intent);
+        Cursor resultado = db.rawQuery("select * from imagenes", new String[]{});
+        int aux = 0;
+
+        while(resultado.moveToNext()){
+            Toast.makeText(getApplicationContext(), "imagen: " + aux, Toast.LENGTH_SHORT).show();
+            aux++;
+        }
     }
+
+
 
 }
