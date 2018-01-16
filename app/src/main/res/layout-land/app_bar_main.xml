@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="es.fempa.javi.es.joinmedia.MainActivity">
+    tools:context="es.fempa.javi.es.joinmedia.MainActivity"
+    android:background="@drawable/fondo2">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -42,14 +43,33 @@
         android:layout_height="60dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_delete" />
+        android:tint="@color/blanco"
+        app:backgroundTint="?attr/colorError"
+        app:srcCompat="@drawable/trash" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/procesar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="90dp"
+        android:tint="@color/blanco"
+        app:backgroundTint="@android:color/holo_green_dark"
+        app:layout_anchor="@+id/song_list"
+        app:layout_anchorGravity="right|center"
+        app:srcCompat="@drawable/play" />
 
 
     <LinearLayout
         android:id="@+id/layoutVertical"
         android:layout_width="match_parent"
-        android:layout_height="490dp"
-        android:orientation="vertical"></LinearLayout>
+        android:layout_height="259dp"
+        android:orientation="vertical"
+        android:scrollbars="vertical"
+        android:showDividers="none"
+        tools:layout_editor_absoluteY="160dp">
+
+    </LinearLayout>
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView1"
@@ -57,14 +77,17 @@
         android:layout_height="wrap_content"
         android:fillViewport="true"
         android:scrollbars="horizontal" >
+
         <GridLayout
             android:id="@+id/gridLayout"
-            android:numColumns="auto_fit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginRight="25dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="75dp">
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="75dp"
+            android:numColumns="auto_fit"
+            android:scrollbars="vertical">
+
 
         </GridLayout>
     </HorizontalScrollView>
@@ -72,11 +95,16 @@
     <ListView
         android:id="@+id/song_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="300dp"></ListView>
+        android:layout_height="149dp"
+        android:layout_gravity="bottom"
+        tools:layout_editor_absoluteY="210dp"></ListView>
+
+
 
     <include
         android:id="@+id/include"
-        layout="@layout/content_main" />
+        layout="@layout/content_main"
+        app:layout_anchor="@+id/action_image"
+        app:layout_anchorGravity="bottom|center" />
 
 </android.support.design.widget.CoordinatorLayout>

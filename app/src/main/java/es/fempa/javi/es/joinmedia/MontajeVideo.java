@@ -2,6 +2,7 @@ package es.fempa.javi.es.joinmedia;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,8 +18,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -55,6 +58,8 @@ public class MontajeVideo extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_montaje_video);
+        getSupportActionBar().hide();
+
 
         stop = (FloatingActionButton) this.findViewById(R.id.stop);
         viewFlipper = (ViewFlipper) this.findViewById(R.id.bckgrndViewFlipper1);
@@ -92,6 +97,15 @@ public class MontajeVideo extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+
+            MainActivity.pararCancion();
+
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     private void setFlipperImage(ImagenPropia imagen) {
        // Log.i("Set Filpper Called", res+"");

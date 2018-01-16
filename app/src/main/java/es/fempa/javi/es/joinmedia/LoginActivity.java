@@ -119,8 +119,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         for(int i = 0; i < DUMMY_CREDENTIALS.length; i++) {
             Log.e("dummy", DUMMY_CREDENTIALS[i]);
         }
-        mEmailView.setText("javierdelrey3@gmail.com");
-        mPasswordView.setText("123456");
+
     }
 
     private void populateAutoComplete() {

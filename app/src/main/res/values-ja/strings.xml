@@ -17,7 +17,7 @@
     <string name="desarrolladores">{クリスチャン・ペレス、ミゲル・ヴェルデ、ハビ・デル・レイ}</string>
     <string name="textAbout">メディアに参加する</string>
     <string name="descripcion">メディアに参加する お気に入りの写真や音楽でモンタージュを作成するために作成されたアプリです。プロジェクトを作成し、最も好きな音楽を追加します。</string>
-    <string name="title_activity_main">主な活動</string>
+    <string name="title_activity_main">メディアに参加する</string>
 
     <string name="navigation_drawer_open">ナビゲーションを開く</string>
     <string name="navigation_drawer_close">クローズナビゲーション</string>

@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String Slecteditem= canciones[+position];
-                Toast.makeText(getApplicationContext(), Slecteditem, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Se ha seleccionado la cancion, "+Slecteditem, Toast.LENGTH_SHORT).show();
                 switch (position+1){
                     case 1: cancion = "cancion1";
                     break;
@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity
                             final ImagenPropia mImg = new ImagenPropia(MainActivity.this);
 
                             final LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
+                            
                             lp2.width = 450;
                             lp2.height = 450;
                             //lp2.gravity = Gravity.CENTER;
